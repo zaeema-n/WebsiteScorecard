@@ -10,7 +10,7 @@ from pathlib import Path
 from rich.progress import BarColumn, Progress, TaskProgressColumn, TextColumn, TimeElapsedColumn
 
 from websitescorecard.csv_io import read_csv, write_csv
-from websitescorecard.discovery import search_domains
+from websitescorecard.resolve.domain_search import search_domains
 
 LOOKUP_STATUS_COL = "lookup_status"
 LOOKUP_ERROR_COL = "lookup_error"
@@ -127,6 +127,7 @@ def run_resolve(config: ResolveConfig) -> None:
     with Progress(
         TextColumn("[progress.description]{task.description}"),
         BarColumn(),
+        TextColumn("({task.completed}/{task.total})"),
         TaskProgressColumn(),
         TimeElapsedColumn(),
     ) as progress:

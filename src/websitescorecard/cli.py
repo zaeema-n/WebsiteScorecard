@@ -10,7 +10,7 @@ from rich.console import Console
 
 from websitescorecard import __version__
 from websitescorecard.checks import CHECK_REGISTRY, resolve_checks
-from websitescorecard.resolve_runner import ResolveConfig, run_resolve
+from websitescorecard.resolve import ResolveConfig, run_resolve
 from websitescorecard.runner import ScanConfig, run_scan
 
 app = typer.Typer(

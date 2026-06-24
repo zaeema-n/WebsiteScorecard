@@ -70,6 +70,7 @@ def run_scan(config: ScanConfig) -> None:
     with Progress(
         TextColumn("[progress.description]{task.description}"),
         BarColumn(),
+        TextColumn("({task.completed}/{task.total})"),
         TaskProgressColumn(),
         TimeElapsedColumn(),
     ) as progress:

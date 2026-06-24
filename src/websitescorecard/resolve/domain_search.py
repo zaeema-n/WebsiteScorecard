@@ -1,4 +1,4 @@
-"""Domain discovery via web search."""
+"""Domain search via web search."""
 
 from __future__ import annotations
 

@@ -8,7 +8,7 @@ from unittest.mock import patch
 import pytest
 
 from websitescorecard.csv_io import read_csv
-from websitescorecard.resolve_runner import (
+from websitescorecard.resolve.resolve_runner import (
     LOOKUP_ERROR_COL,
     LOOKUP_STATUS_COL,
     ResolveConfig,
@@ -29,7 +29,7 @@ def test_url_columns_custom_primary():
     assert _url_columns("website", 2) == ["website", "url_2"]
 
 
-@patch("websitescorecard.resolve_runner.search_domains")
+@patch("websitescorecard.resolve.resolve_runner.search_domains")
 def test_run_resolve_limit_1(mock_search, tmp_path: Path):
     def fake_search(query: str, **kwargs):
         if "Finance" in query:
@@ -71,7 +71,7 @@ def test_run_resolve_limit_1(mock_search, tmp_path: Path):
     assert mock_search.call_count == 2
 
 
-@patch("websitescorecard.resolve_runner.search_domains")
+@patch("websitescorecard.resolve.resolve_runner.search_domains")
 def test_run_resolve_limit_3(mock_search, tmp_path: Path):
     mock_search.return_value = ["first.gov.lk", "second.gov.lk", "third.gov.lk"]
 
@@ -106,7 +106,7 @@ def test_run_resolve_limit_3(mock_search, tmp_path: Path):
     assert row[LOOKUP_ERROR_COL] == ""
 
 
-@patch("websitescorecard.resolve_runner.search_domains")
+@patch("websitescorecard.resolve.resolve_runner.search_domains")
 def test_run_resolve_skips_existing_url(mock_search, tmp_path: Path):
     input_csv = tmp_path / "input.csv"
     output_csv = tmp_path / "output.csv"
@@ -134,7 +134,7 @@ def test_run_resolve_skips_existing_url(mock_search, tmp_path: Path):
     mock_search.assert_called_once()
 
 
-@patch("websitescorecard.resolve_runner.search_domains")
+@patch("websitescorecard.resolve.resolve_runner.search_domains")
 def test_run_resolve_no_results(mock_search, tmp_path: Path):
     mock_search.return_value = []
 
@@ -158,7 +158,7 @@ def test_run_resolve_no_results(mock_search, tmp_path: Path):
     assert rows[0][LOOKUP_ERROR_COL] == ""
 
 
-@patch("websitescorecard.resolve_runner.search_domains")
+@patch("websitescorecard.resolve.resolve_runner.search_domains")
 def test_run_resolve_search_error(mock_search, tmp_path: Path):
     mock_search.side_effect = RuntimeError("search failed")
 
@@ -195,7 +195,7 @@ def test_run_resolve_empty_name_records_error(tmp_path: Path):
         delay=0,
     )
 
-    with patch("websitescorecard.resolve_runner.search_domains") as mock_search:
+    with patch("websitescorecard.resolve.resolve_runner.search_domains") as mock_search:
         run_resolve(config)
         mock_search.assert_not_called()
 

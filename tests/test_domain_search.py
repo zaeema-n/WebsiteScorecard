@@ -1,10 +1,10 @@
-"""Tests for domain discovery."""
+"""Tests for domain search."""
 
 from unittest.mock import MagicMock, patch
 
 import pytest
 
-from websitescorecard.discovery import (
+from websitescorecard.resolve.domain_search import (
     extract_hostname,
     hostnames_from_results,
     matches_suffix,
@@ -73,7 +73,7 @@ def test_hostnames_from_results_dedupes_and_filters():
     ]
 
 
-@patch("websitescorecard.discovery.DDGS")
+@patch("websitescorecard.resolve.domain_search.DDGS")
 def test_search_domains_filters_and_limits(mock_ddgs_cls):
     mock_ddgs = MagicMock()
     mock_ddgs.__enter__.return_value = mock_ddgs
@@ -96,7 +96,7 @@ def test_search_domains_filters_and_limits(mock_ddgs_cls):
     mock_ddgs.text.assert_called_once_with("Ministry of Finance Sri Lanka", max_results=4)
 
 
-@patch("websitescorecard.discovery.DDGS")
+@patch("websitescorecard.resolve.domain_search.DDGS")
 def test_search_domains_zero_limit_returns_empty(mock_ddgs_cls):
     assert search_domains("query", limit=0) == []
     mock_ddgs_cls.assert_not_called()
