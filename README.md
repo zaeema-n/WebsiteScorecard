@@ -87,11 +87,11 @@ Typical two-step workflow:
 
 ```bash
 # 1. Resolve names → domains (gov.lk and .gov only, keep up to 3 per row)
-websitescorecard resolve bodies.csv -c "Institution Name" \
-  --suffixes gov.lk,gov --limit 3 -o bodies_with_urls.csv
+websitescorecard resolve data/bodies.csv -c "Institution Name" \
+  --suffixes gov.lk,lk --limit 3 -o data/bodies_with_urls.csv
 
 # 2. Scan the first URL column
-websitescorecard scan bodies_with_urls.csv -c URL --checks ssl
+websitescorecard scan data/bodies_with_urls.csv -c URL --checks ssl
 ```
 
 `resolve` searches DuckDuckGo for `"{name} {query_suffix}"` (default query suffix: `Sri Lanka`), extracts hostnames from results, optionally filters by hostname suffix, and writes an enriched CSV. All original columns are preserved.
@@ -164,8 +164,8 @@ Examples:
 
 ```bash
 # Resolve with suffix filter and multiple URLs per row
-websitescorecard resolve bodies.csv -c "Institution Name" \
-  --suffixes gov.lk,gov --limit 3 -o bodies_with_urls.csv
+websitescorecard resolve data/bodies.csv -c "Institution Name" \
+  --suffixes gov.lk,lk --limit 3 -o data/bodies_with_urls.csv
 
 # View all options
 websitescorecard resolve --help
