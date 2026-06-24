@@ -56,7 +56,7 @@ This writes `data/mins_depts_test_scored.csv` by default (same name as input wit
 Specify an output file:
 
 ```bash
-websitescorecard scan data/mins_depts_test.csv -c URL -o data/mins_depts_scored.csv --checks ssl
+websitescorecard scan data/mins_depts_test.csv -c URL -o output/mins_depts_scored.csv --checks ssl
 ```
 
 ### 4. Check the output
@@ -88,10 +88,10 @@ Typical two-step workflow:
 ```bash
 # 1. Resolve names → domains (gov.lk and .gov only, keep up to 3 per row)
 websitescorecard resolve data/bodies.csv -c "Institution Name" \
-  --suffixes gov.lk,lk --limit 3 -o data/bodies_with_urls.csv
+  --suffixes gov.lk,lk --limit 3 -o output/bodies_with_urls.csv
 
 # 2. Scan the first URL column
-websitescorecard scan data/bodies_with_urls.csv -c URL --checks ssl
+websitescorecard scan output/bodies_with_urls.csv -c URL --checks ssl
 ```
 
 `resolve` searches DuckDuckGo for `"{name} {query_suffix}"` (default query suffix: `Sri Lanka`), extracts hostnames from results, optionally filters by hostname suffix, and writes an enriched CSV. All original columns are preserved.
@@ -165,7 +165,7 @@ Examples:
 ```bash
 # Resolve with suffix filter and multiple URLs per row
 websitescorecard resolve data/bodies.csv -c "Institution Name" \
-  --suffixes gov.lk,lk --limit 3 -o data/bodies_with_urls.csv
+  --suffixes gov.lk,lk --limit 3 -o output/bodies_with_urls.csv
 
 # View all options
 websitescorecard resolve --help
