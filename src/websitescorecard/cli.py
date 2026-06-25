@@ -152,7 +152,6 @@ def resolve(
         raise typer.Exit(code=1)
 
     output_path = output or _default_resolve_output_path(input_csv)
-    timeout_seconds = int(timeout) if timeout is not None else None
 
     config = ResolveConfig(
         input_path=input_csv,
@@ -164,7 +163,7 @@ def resolve(
         query_suffix=query_suffix,
         concurrency=concurrency,
         delay=delay,
-        timeout=timeout_seconds,
+        timeout=timeout,
     )
 
     try:

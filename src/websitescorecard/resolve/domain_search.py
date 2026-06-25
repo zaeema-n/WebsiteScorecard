@@ -91,14 +91,14 @@ def search_domains(
     limit: int = 1,
     normalized_suffixes: list[str] | None = None,
     oversample_factor: int = OVERSAMPLE_FACTOR,
-    timeout: int | None = None,
+    timeout: float | None = None,
 ) -> list[str]:
     """Search for domains matching a query, filtered by optional hostname suffixes."""
     if limit < 1:
         return []
 
     max_results = max(limit * oversample_factor, limit)
-    ddgs_kwargs: dict[str, int] = {}
+    ddgs_kwargs: dict[str, float] = {}
     if timeout is not None:
         ddgs_kwargs["timeout"] = timeout
 

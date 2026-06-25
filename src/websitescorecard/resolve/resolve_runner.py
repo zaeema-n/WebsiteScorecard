@@ -27,7 +27,7 @@ class ResolveConfig:
     query_suffix: str = "Sri Lanka"
     concurrency: int = 1
     delay: float = 1.0
-    timeout: int | None = None
+    timeout: float | None = None
 
 
 def _url_columns(url_column: str, limit: int) -> list[str]:
@@ -71,7 +71,7 @@ def _resolve_row(
     query_suffix: str,
     limit: int,
     delay: float,
-    timeout: int | None,
+    timeout: float | None,
 ) -> tuple[int, dict[str, str]]:
     if _has_existing_url(row, url_columns[0]):
         return index, _ensure_resolve_columns(row, url_columns)
