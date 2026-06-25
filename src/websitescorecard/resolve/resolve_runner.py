@@ -122,7 +122,7 @@ def run_resolve(config: ResolveConfig) -> None:
 
     url_cols = _url_columns(config.url_column, config.limit)
     output_columns = _output_columns(original_columns, url_cols)
-    enriched_rows: list[dict[str, str] | None] = [None] * len(rows)
+    enriched_rows_map: dict[int, dict[str, str]] = {}
     normalized_suffixes = (
         normalize_suffixes(config.suffixes) if config.suffixes else None
     )
@@ -154,7 +154,8 @@ def run_resolve(config: ResolveConfig) -> None:
             }
             for future in as_completed(futures):
                 index, enriched = future.result()
-                enriched_rows[index] = enriched
+                enriched_rows_map[index] = enriched
                 progress.advance(task)
 
-    write_csv(config.output_path, output_columns, enriched_rows)  # type: ignore[arg-type]
+    enriched_rows = [enriched_rows_map[i] for i in range(len(rows))]
+    write_csv(config.output_path, output_columns, enriched_rows)
