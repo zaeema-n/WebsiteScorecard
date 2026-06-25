@@ -10,7 +10,7 @@ from pathlib import Path
 from rich.progress import BarColumn, Progress, TaskProgressColumn, TextColumn, TimeElapsedColumn
 
 from websitescorecard.csv_io import read_csv, write_csv
-from websitescorecard.resolve.domain_search import search_domains
+from websitescorecard.resolve.domain_search import normalize_suffixes, search_domains
 
 LOOKUP_STATUS_COL = "lookup_status"
 LOOKUP_ERROR_COL = "lookup_error"
@@ -67,7 +67,7 @@ def _resolve_row(
     *,
     name_column: str,
     url_columns: list[str],
-    suffixes: list[str] | None,
+    normalized_suffixes: list[str] | None,
     query_suffix: str,
     limit: int,
     delay: float,
@@ -90,7 +90,7 @@ def _resolve_row(
         domains = search_domains(
             query,
             limit=limit,
-            suffixes=suffixes,
+            normalized_suffixes=normalized_suffixes,
             timeout=timeout,
         )
         if domains:
@@ -123,6 +123,9 @@ def run_resolve(config: ResolveConfig) -> None:
     url_cols = _url_columns(config.url_column, config.limit)
     output_columns = _output_columns(original_columns, url_cols)
     enriched_rows: list[dict[str, str] | None] = [None] * len(rows)
+    normalized_suffixes = (
+        normalize_suffixes(config.suffixes) if config.suffixes else None
+    )
 
     with Progress(
         TextColumn("[progress.description]{task.description}"),
@@ -141,7 +144,7 @@ def run_resolve(config: ResolveConfig) -> None:
                     row,
                     name_column=config.name_column,
                     url_columns=url_cols,
-                    suffixes=config.suffixes,
+                    normalized_suffixes=normalized_suffixes,
                     query_suffix=config.query_suffix,
                     limit=config.limit,
                     delay=config.delay,

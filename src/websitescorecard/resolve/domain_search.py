@@ -28,20 +28,24 @@ def normalize_suffixes(suffixes: Sequence[str] | None) -> list[str] | None:
     return sorted(set(normalized), key=len, reverse=True)
 
 
+def _hostname_matches_suffixes(host: str, normalized: list[str]) -> bool:
+    for suffix in normalized:
+        if host == suffix or host.endswith("." + suffix):
+            return True
+    return False
+
+
 def matches_suffix(hostname: str, suffixes: Sequence[str] | None) -> bool:
     """Return True if hostname matches any allowed suffix."""
     if not suffixes:
         return True
 
-    host = hostname.lower().rstrip(".")
     normalized = normalize_suffixes(suffixes)
     if not normalized:
         return True
 
-    for suffix in normalized:
-        if host == suffix or host.endswith("." + suffix):
-            return True
-    return False
+    host = hostname.lower().rstrip(".")
+    return _hostname_matches_suffixes(host, normalized)
 
 
 def extract_hostname(url: str) -> str | None:
@@ -60,7 +64,7 @@ def extract_hostname(url: str) -> str | None:
 def hostnames_from_results(
     results: Iterable[dict[str, str]],
     *,
-    suffixes: Sequence[str] | None = None,
+    normalized_suffixes: list[str] | None = None,
 ) -> list[str]:
     """Extract unique hostnames from search results, optionally filtered by suffix."""
     seen: set[str] = set()
@@ -71,7 +75,9 @@ def hostnames_from_results(
         hostname = extract_hostname(href)
         if not hostname or hostname in seen:
             continue
-        if not matches_suffix(hostname, suffixes):
+        if normalized_suffixes is not None and not _hostname_matches_suffixes(
+            hostname, normalized_suffixes
+        ):
             continue
         seen.add(hostname)
         hostnames.append(hostname)
@@ -83,7 +89,7 @@ def search_domains(
     query: str,
     *,
     limit: int = 1,
-    suffixes: Sequence[str] | None = None,
+    normalized_suffixes: list[str] | None = None,
     oversample_factor: int = OVERSAMPLE_FACTOR,
     timeout: int | None = None,
 ) -> list[str]:
@@ -99,5 +105,5 @@ def search_domains(
     with DDGS(**ddgs_kwargs) as ddgs:
         results = list(ddgs.text(query, max_results=max_results))
 
-    hostnames = hostnames_from_results(results, suffixes=suffixes)
+    hostnames = hostnames_from_results(results, normalized_suffixes=normalized_suffixes)
     return hostnames[:limit]

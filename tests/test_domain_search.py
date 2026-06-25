@@ -67,7 +67,10 @@ def test_hostnames_from_results_dedupes_and_filters():
         {"href": "https://news.site.com/story"},
     ]
 
-    assert hostnames_from_results(results, suffixes=["gov.lk", "gov"]) == [
+    assert hostnames_from_results(
+        results,
+        normalized_suffixes=normalize_suffixes(["gov.lk", "gov"]),
+    ) == [
         "treasury.gov.lk",
         "defence.gov.lk",
     ]
@@ -88,7 +91,7 @@ def test_search_domains_filters_and_limits(mock_ddgs_cls):
     domains = search_domains(
         "Ministry of Finance Sri Lanka",
         limit=2,
-        suffixes=["gov.lk"],
+        normalized_suffixes=normalize_suffixes(["gov.lk"]),
         oversample_factor=2,
     )
 
