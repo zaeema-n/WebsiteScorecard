@@ -99,15 +99,5 @@ def search_domains(
     with DDGS(**ddgs_kwargs) as ddgs:
         results = list(ddgs.text(query, max_results=max_results))
 
-    print(f"[ddgs] query: {query!r} (max_results={max_results})")
-    if results:
-        for i, result in enumerate(results, 1):
-            href = result.get("href") or result.get("url") or ""
-            title = result.get("title") or ""
-            print(f"[ddgs]   {i}. {href} | {title}")
-    else:
-        print("[ddgs]   (no results)")
-    print()
-
     hostnames = hostnames_from_results(results, suffixes=suffixes)
     return hostnames[:limit]
